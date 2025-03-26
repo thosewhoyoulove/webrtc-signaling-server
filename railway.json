@@ -1,0 +1,10 @@
+{
+    "build": {
+        "env": {
+            "PORT": "3001"
+        }
+    },
+    "deploy": {
+        "startCommand": "npm start"
+    }
+}
