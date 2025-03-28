@@ -15,8 +15,6 @@ const io = new Server(server, {
 });
 
 io.on("connection", socket => {
-    console.log(`✅ User connected: ${socket.id}`);
-
     socket.on("join-room", roomId => {
         socket.join(roomId);
         socket.to(roomId).emit("user-joined", socket.id);
