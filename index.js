@@ -33,11 +33,11 @@ io.on("connection", socket => {
     });
 
     socket.on("disconnect", () => {
-        console.log(`❌ User disconnected: ${socket.id}`);
+        console.log(` User disconnected: ${socket.id}`);
     });
 });
 
 const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
-    console.log(`🚀 Socket.IO server running on port ${PORT}`);
+    console.log(` Socket.IO server running on port ${PORT}`);
 });
