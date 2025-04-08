@@ -14,6 +14,14 @@ const io = new Server(server, {
     },
 });
 
+// 错误处理
+io.engine.on("connection_error", err => {
+    console.log("连接错误:", err.req);
+    console.log("错误代码:", err.code);
+    console.log("错误消息:", err.message);
+    console.log("错误上下文:", err.context);
+});
+
 io.on("connection", socket => {
     socket.on("join-room", roomId => {
         socket.join(roomId);
@@ -30,10 +38,11 @@ io.on("connection", socket => {
         socket.on("ice-candidate", data => {
             socket.to(roomId).emit("ice-candidate", data);
         });
-    });
-
-    socket.on("disconnect", () => {
-        console.log(` User disconnected: ${socket.id}`);
+        // 监听用户离开房间
+        socket.on("leave-room", inviteCode => {
+            console.log("leave-room", inviteCode);
+            socket.to(inviteCode).emit("user-left"); // 通知房间里的其他用户
+        });
     });
 });
 
