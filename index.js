@@ -38,6 +38,17 @@ io.on("connection", socket => {
         socket.on("ice-candidate", data => {
             socket.to(roomId).emit("ice-candidate", data);
         });
+
+        // 音量控制事件
+        socket.on("toggle-audio", data => {
+            const { isAudioEnabled } = data;
+            console.log(`用户 ${socket.id} ${isAudioEnabled ? "打开" : "关闭"}了音量`);
+            socket.to(roomId).emit("user-audio-toggle", {
+                userId: socket.id,
+                isAudioEnabled,
+            });
+        });
+
         // 监听用户离开房间
         socket.on("leave-room", inviteCode => {
             console.log("leave-room", inviteCode);
