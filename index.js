@@ -39,21 +39,26 @@ io.on("connection", socket => {
             socket.to(roomId).emit("ice-candidate", data);
         });
 
-        // 音量控制事件
+        // 处理音频状态变化
         socket.on("toggle-audio", data => {
-            const { isAudioEnabled } = data;
-            console.log(`用户 ${socket.id} ${isAudioEnabled ? "打开" : "关闭"}了音量`);
+            console.log(`用户 ${socket.id} ${data.isAudioEnabled ? "打开" : "关闭"}了音频`);
             socket.to(roomId).emit("user-audio-toggle", {
                 userId: socket.id,
-                isAudioEnabled,
+                isAudioEnabled: data.isAudioEnabled,
             });
         });
 
         // 监听用户离开房间
-        socket.on("leave-room", inviteCode => {
-            console.log("leave-room", inviteCode);
-            socket.to(inviteCode).emit("user-left"); // 通知房间里的其他用户
+        socket.on("leave-room", () => {
+            console.log(`用户 ${socket.id} 离开了房间 ${roomId}`);
+            socket.to(roomId).emit("user-left");
+            socket.leave(roomId);
         });
+    });
+
+    // 处理断开连接
+    socket.on("disconnect", () => {
+        console.log(`用户 ${socket.id} 断开连接`);
     });
 });
 
